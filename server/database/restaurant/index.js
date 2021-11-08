@@ -13,11 +13,11 @@ const RestaurantSchema = new mongoose.Schema({
     averageCost: Number,
     amenties: [String],
     menuImages: {
-      tupe: mongoose.Types.ObjectId,
+      type: mongoose.Types.ObjectId,
       ref: "Images",
     },
     menu: {
-        tupe: mongoose.Types.ObjectId,
+        type: mongoose.Types.ObjectId,
         ref: "Menu",
     },
     reviews: [{ type: mongoose.Types.ObjectId, ref: "Reviews" }],
