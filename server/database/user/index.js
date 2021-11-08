@@ -15,6 +15,19 @@ const UserSchema =  new mongoose.Schema({
 
 //statics and methods
 
+UserSchema.statics.findByEmailAndPassword = async ({password, email}) => {
+    //check weather email exists
+    const user = await UserModel.findOne({email});
+    if(!user) throw new Error("User does not exists!");
+
+    //compare password
+    const doesPasswordMatch = await bcrypt.compare(password, user.password);
+
+    if(!doesPasswordMatch) throw new Error("Invalid password!!");
+
+    return user;
+};
+
 UserSchema.statics.findByEmailAndPhone = async({email, phoneNumber}) => {
     //check weather email exists
     const checkUserByEmail = await UserModel.findOne({email});
