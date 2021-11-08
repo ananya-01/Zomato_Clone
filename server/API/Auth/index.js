@@ -16,25 +16,19 @@ Access    Public
 Method    Post
 */
 
-Router.post("/signup",async(req,res) => {
+Router.post("/signup", async (req, res) => {
     try{
-        const {email,password, fullname, phoneNumber} = req.body.credentials;
-        //check whether email exists
-        const checkUserByEmail = await UserModel.findOne({email});
-        const checkUserByPhone = await UserModel.findOne({phoneNumber});
 
-        if(checkUserByEmail || checkUserByPhone){
-            return res.json({error: "User already exits"});
-        }
-        //hash password
-        const bcryptSalt =  await bcrypt.genSalt(8);
+        await UserModel.findByEmailAndPhone(req.body.credentials);
 
-        const hashedPassword = await bcrypt.hash(password, bcryptSalt);
-        //generate JWT auth token
-        const token = jwt.sign({user:{fullname,email}},"ZomatoAPP");
-      
+        const newUser = await UserModel.create(req.body.credentials);
+
+        const token = newUser.generateJwtToken();
+
+        return res.status(200).json({token, status:"success"});
+
     }catch(error){
-        return res.status(500).json({error: error.message});
+        return res.status(500).json({error:error.message });
     }
 });
 
