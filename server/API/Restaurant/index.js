@@ -4,6 +4,10 @@ import express from "express";
 //database Model
 import {RestaurantModel} from "../../database/allModels";
 
+//validation
+import {validateRestaurantCity, validateRestaurantSearchString} from "../../validation/restaurant";
+import {ValidateRestaurantId} from "../../validation/food";
+
 
 const Router = express.Router();
 
@@ -16,6 +20,8 @@ Method          GET
 */
 Router.get("/", async (req, res) => {
     try{
+        await validateRestaurantCity(req.query);
+
         const { city } = req.query;
         const restaurants = await RestaurantModel.find({ city }); 
         return res.json({restaurants});
@@ -34,6 +40,8 @@ Method          GET
 */
 Router.get("/:_id", async (req, res) => {
     try{
+        await ValidateRestaurantId(req.params);
+
         const {_id} = req.params;
         const restaurant = await RestaurantModel.findById(_id);
         if(!restaurant){
@@ -55,6 +63,8 @@ Method          GET
 */
 Router.get("/search",async (req, res) => {
     try{
+        await validateRestaurantSearchString(req.body);
+        
         const {searchString } = req.body;
         const restaurants = await RestaurantModel.find({
             name: { $regex: searchString, $options: "i" },
