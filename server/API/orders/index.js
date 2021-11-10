@@ -14,7 +14,7 @@ Params          id
 Access          public
 Method          GET
 */
-Router.get("/:_id", passport.authenticate('jwt', {session:false}) ,async (req, res) => {
+Router.get("/:_id", passport.authenticate("jwt", {session:false}) ,async (req, res) => {
     try{
         const {_id} = req.params;
         const getOrders = await OrderModel.findOne({user:_id});
@@ -33,7 +33,7 @@ Params          _id
 Access          public
 Method          POST
 */
-Router.post("/new/:_id", passport.authenticate('jwt', {session:false}) , async (req,res) => {
+Router.post("/new/:_id", passport.authenticate("jwt", {session:false}) , async (req,res) => {
     try{
         const {_id} = req.params;
         const {orderDetails} =req.body;
