@@ -8,7 +8,7 @@ import {RiSearch2Line} from 'react-icons/ri';
 
 const MobileNav = () =>{
     return (
-        <div className="flex w-full items-center justify-between lg:hidden gap-32 md:gap-96">
+        <div className="flex w-full items-center justify-between lg:hidden">
             <div className="w-28">
                 <img src="https://b.zmtcdn.com/web_assets/b40b97e677bc7b2ca77c58c61db266fe1603954218.png" 
                 alt="logo"
@@ -30,7 +30,7 @@ const MobileNav = () =>{
 const LargeNav = () => {
     return(
         <>
-        <div className="container px-20 mx-auto">
+        <div className="hidden lg:inline container px-20 mx-auto">
         <div className="hidden gap-4 lg:flex items-center w-full justify-between ">
             <div className="w-28">
                 <img src="https://b.zmtcdn.com/web_assets/b40b97e677bc7b2ca77c58c61db266fe1603954218.png" 
