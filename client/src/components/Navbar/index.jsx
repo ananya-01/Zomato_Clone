@@ -42,7 +42,7 @@ const LargeNav = () => {
                     <span className="text-zomato-400">
                         <HiLocationMarker />
                     </span>
-                    <input type="text" placeholder="Bengaluru" className="focus:outline-none"/>
+                    <input type="text" placeholder="Bhubaneswar" className="focus:outline-none"/>
                     <IoMdArrowDropdown />
                 </div>
                 <div className="flex items-center w-full gap-2">
