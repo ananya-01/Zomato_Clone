@@ -8,7 +8,7 @@ const NightLife = () => {
     <div>
       <NightLifeCarousal />
       <h1 className="text-xl my-4 md:my-8 md:text-3xl md:font-semibold">
-        Nightlife Restaurants in Vijay Nagar
+        Nightlife Restaurants in Bhubaneswar
       </h1>
     </div>
   );
