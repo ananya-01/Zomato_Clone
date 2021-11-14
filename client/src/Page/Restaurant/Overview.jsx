@@ -107,7 +107,7 @@ const Overview = () => {
             </Link>
           </div>
           <div className="flex flex-wrap gap-3 my-4">
-           <MenuCollection menuTitle='Menu' pages='3' image="https://th.bing.com/th/id/OIP.v8DBoOobRR4GPlHtGNVEggHaKd?w=182&h=257&c=7&r=0&o=5&dpr=1.25&pid=1.7"/>
+           <MenuCollection menuTitle='Menu' pages='3' image={menuImage}/>
           </div>
           <h4 className="text-lg font-medium my-4">Cuisines</h4>
           <div className="flex flex-wrap gap-2">
