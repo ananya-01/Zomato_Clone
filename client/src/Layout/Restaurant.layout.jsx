@@ -10,7 +10,7 @@ import InfoButtons from "../components/restaurant/InfoButtons";
 import RestaurantInfo from "../components/restaurant/RestaurantInfo";
 import TabContainer from "../components/restaurant/Tabs";
 
-const RestaurantLayout = () => {
+const RestaurantLayout = (props) => {
     return(
         <>
         <RestaurantNavbar />
@@ -47,7 +47,7 @@ const RestaurantLayout = () => {
             <div className="my-10">
                 <TabContainer></TabContainer>
             </div>
-        
+            <div className="relative">{props.children}</div>
        </div>
         </>
     );
