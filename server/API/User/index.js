@@ -1,5 +1,6 @@
 //libraries
 import express from "express";
+import passport from "passport";
 
 //database modal
 import {UserModel} from "../../database/allModels";
@@ -26,12 +27,30 @@ Router.get("/:_id", async (req, res) => {
     }
 });
 
+/*
+Route           /
+Des             Get user data
+Params          none
+Access          Public
+Method          GET
+*/
+Router.get("/", passport.authenticate("jwt"), (req, res) => {
+    try {
+      const { email, fullName, phoneNumber, address } =
+        req.session.passport.user._doc;
+  
+      return res.json({ user: { email, fullName, phoneNumber, address } });
+    } catch (error) {
+      return res.status(500).json({ error: error.message });
+    }
+});
+
 /* 
 Route           /update/:_id
 Desc            update user data
 Body            user data
 Access          public
-Method          GET
+Method          PUT
 */
 Router.put("/update/:userId", async (req, res) => {
     try{

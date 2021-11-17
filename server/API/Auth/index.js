@@ -4,9 +4,6 @@ import passport from "passport";
 //Models
 import { UserModel } from "../../database/user";
 
-//validation
-import {validateSignup, validateSignin} from '../../validation/auth';
-
 const Router = express.Router();
 
 /*
@@ -19,7 +16,6 @@ Method    POST
 
 Router.post("/signup", async (req, res) => {
     try{
-        await validateSignup(req.body.credentials);
 
         await UserModel.findByEmailAndPhone(req.body.credentials);
 
@@ -44,7 +40,6 @@ Method          POST
 
 Router.post("/signin", async (req, res) => {
     try{
-        await validateSignin(req.body.credentials);
 
         const user = await UserModel.findByEmailAndPassword(req.body.credentials);
         const token = user.generateJwtToken();
@@ -81,10 +76,14 @@ Params          none
 Access          public
 Method          GET
 */
-Router.get("/google/callback", passport.authenticate("google",{failureRedirect: "/"}),
-(req,res) => {
-  return res.json({token: req.session.passport.user.token});
-}
-);
+Router.get(
+    "/google/callback",
+    passport.authenticate("google", { failureRedirect: "/" }),
+    (req, res) => {
+      return res.redirect(
+        `http://localhost:3000/google/${req.session.passport.user.token}`
+      );
+    }
+  );
 
 export default Router;
