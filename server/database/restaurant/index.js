@@ -12,16 +12,16 @@ const RestaurantSchema = new mongoose.Schema({
     popularDishes: [String],
     averageCost: Number,
     amenties: [String],
-    menuImages: {
+    menuImages: [{
       type: mongoose.Types.ObjectId,
       ref: "Images",
-    },
-    menu: {
+    }],
+    menu: [{
         type: mongoose.Types.ObjectId,
         ref: "Menu",
-    },
+    }],
     reviews: [{ type: mongoose.Types.ObjectId, ref: "Reviews" }],
-    photos: { type: mongoose.Types.ObjectId, ref: "Images" },
+    photos: [{ type: mongoose.Types.ObjectId, ref: "Images" }],
 },
 {
     timestamps: true,
