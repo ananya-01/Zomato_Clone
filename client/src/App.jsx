@@ -1,11 +1,13 @@
 import {Route, Redirect} from "react-router-dom";
+import axios from "axios";
+import { useDispatch } from "react-redux";
+import React, { useEffect } from "react";
 
 //HOC
 import HomeLayoutHOC from "./HOC/Home.Hoc";
 import RestaurantLayoutHOC from "./HOC/Restaurant.Hoc";
 import CheckoutLayoutHOC from "./HOC/Checkout.Hoc";
 
-import Temp from "./components/temp";
 
 //pages
 import Home from "./Page/Home";
@@ -15,6 +17,7 @@ import Reviews from "./Page/Restaurant/Reviews";
 import Menu from "./Page/Restaurant/Menu";
 import Photos from "./Page/Restaurant/Photos";
 import Checkout from "./Page/Restaurant/Checkout";
+import RestaurantRedirect from "./Page/Restaurant/RestaurantRedirect";
 
 const App = () => {
   return (
@@ -22,9 +25,7 @@ const App = () => {
     <Route path="/" exact>
       <Redirect to="/delivery" />
     </Route>
-    <Route path="/restaurant/:id" exact>
-      <Redirect to="/restaurant/:id/overview" />
-    </Route>
+    <Route path="/restaurant/:id" exact component={RestaurantRedirect} />
       <HomeLayoutHOC path="/:type" exact component={Home} />
       <RestaurantLayoutHOC  path="/restaurant/:id/overview" exact component={Overview} />
       <RestaurantLayoutHOC  path="/restaurant/:id/order-online" exact component={OrderOnline} />
