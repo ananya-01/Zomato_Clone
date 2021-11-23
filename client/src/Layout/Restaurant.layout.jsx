@@ -1,4 +1,8 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { useDispatch } from "react-redux";
+
+//Icons
 import { TiStarOutline } from "react-icons/ti";
 import { RiDirectionLine, RiShareForwardLine } from "react-icons/ri";
 import { BiBookmarkPlus } from "react-icons/bi";
@@ -11,26 +15,47 @@ import RestaurantInfo from "../components/restaurant/RestaurantInfo";
 import TabContainer from "../components/restaurant/Tabs";
 import CartContainer from "../components/Cart/CartContainer";
 
+//Redux 
+import { getSpecificRestaurant } from "../Redux/Reducer/restaurant/restaurant.action";
+import { getImage } from "../Redux/Reducer/Image/Image.action";
+
 const RestaurantLayout = (props) => {
+    const [restaurant, setRestaurant] = useState({
+        images: [],
+        name: "",
+        cuisine: "",
+        address: "",
+        restaurantReviewValue:"",
+      });
+
+    const { id } = useParams();
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(getSpecificRestaurant(id)).then((data) => {
+          setRestaurant((prev) => ({
+            ...prev,
+            ...data.payload.restaurant,
+          }));
+    
+          dispatch(getImage(data.payload.restaurant.photos)).then((data) =>
+            setRestaurant((prev) => ({ ...prev, ...data.payload.image }))
+          );
+        });
+    
+      }, []);
+
     return(
         <>
         <RestaurantNavbar />
         <div className="container mx-auto px-4 lg:px-20">
-            <ImageGrid 
-            images={[
-                "https://th.bing.com/th/id/OIP.b-6A7J2ZuL4tyP33bRUfUgHaEw?w=273&h=180&c=7&r=0&o=5&dpr=1.25&pid=1.7",
-                "https://th.bing.com/th/id/OIP.b-6A7J2ZuL4tyP33bRUfUgHaEw?w=273&h=180&c=7&r=0&o=5&dpr=1.25&pid=1.7",
-                "https://th.bing.com/th/id/OIP.b-6A7J2ZuL4tyP33bRUfUgHaEw?w=273&h=180&c=7&r=0&o=5&dpr=1.25&pid=1.7",
-                "https://th.bing.com/th/id/OIP.b-6A7J2ZuL4tyP33bRUfUgHaEw?w=273&h=180&c=7&r=0&o=5&dpr=1.25&pid=1.7",
-                "https://th.bing.com/th/id/OIP.b-6A7J2ZuL4tyP33bRUfUgHaEw?w=273&h=180&c=7&r=0&o=5&dpr=1.25&pid=1.7"
-
-            ]}/>
+            <ImageGrid images={restaurant.images}/>
             <RestaurantInfo 
-            name="Mumbai Express"
-            restaurantRating="3.8"
-            deliveryRating="3.5"
-            cuisine="Fast Food, North Indian,Chinese,Street Food"
-            address="bhubaneswar"/>
+                      name={restaurant?.name}
+                      restaurantRating={restaurant?.restaurantReviewValue || 0}
+                      deliveryRating={restaurant?.rating || 4}
+                      cuisine={restaurant?.cuisine}
+                      address={restaurant?.address}/>
             <div className="my-4 flex flex-wrap gap-3">
                 <InfoButtons isActive>
                     <TiStarOutline /> Add Review

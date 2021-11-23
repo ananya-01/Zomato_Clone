@@ -14,14 +14,14 @@ const RestaurantSchema = new mongoose.Schema({
     amenties: [String],
     restaurantReviewValue:Number,
     durationOfDelivery:Number,
-    menuImages: [{
+    menuImages: {
       type: mongoose.Types.ObjectId,
       ref: "Images",
-    }],
-    menu: [{
+    },
+    menu: {
         type: mongoose.Types.ObjectId,
         ref: "Menu",
-    }],
+    },
     reviews: [{ type: mongoose.Types.ObjectId, ref: "Reviews" }],
     photos: { type: mongoose.Types.ObjectId, ref: "Images" },
 },
