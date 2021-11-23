@@ -1,17 +1,16 @@
 import { GET_IMAGE } from "./Image.type";
 
-const INITIAL_STATE = {
+const initialState = {
   Image: [],
 };
 
-const ImageReducer = (state = INITIAL_STATE, action) => {
+const ImageReducer = (state = initialState, action) => {
   switch (action.type) {
     case GET_IMAGE:
       return {
         ...state,
         Image: action.payload,
       };
-
     default:
       return {
         ...state,
