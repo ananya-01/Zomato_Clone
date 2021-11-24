@@ -1,6 +1,7 @@
-import React,{useState} from 'react';
+import React, { useState, useEffect } from "react";
 import {Link, useParams} from 'react-router-dom';
 import Slider from 'react-slick';
+import { useSelector, useDispatch } from "react-redux";
 import ReactStars from "react-rating-stars-component";
 
 //Icons
@@ -13,48 +14,15 @@ import { NextArrow, PrevArrow } from "../../components/CarousalArrow";
 import ReviewCard from '../../components/restaurant/Reviews/reviewCard';
 import Mapview from '../../components/restaurant/Mapview';
 
+//Redux
+import { getImage } from "../../Redux/Reducer/Image/Image.action";
+import { getReviews } from "../../Redux/Reducer/Reviews/review.action";
+
 const Overview = () => {
-    const {id} = useParams();
+  const [menuImage, setMenuImages] = useState({ images: [] });
+  const [Reviews, setReviews] = useState([]);
 
-    const [menuImage, setMenuImage] = useState([
-       "https://b.zmtcdn.com/data/pictures/0/18930190/8b41602a27ac441ba909237947be73ec.jpg",
-       "https://b.zmtcdn.com/data/reviews_photos/faf/e76d6bc3df21781ca49c93dd4d4edfaf_1624699914.jpg",
-       "https://b.zmtcdn.com/data/dish_photos/e56/c6942fc1a954329fe4ed8bdf9a481e56.jpg",
-
-    ]);
-    const [Reviews, setReviews] = useState([
-        {
-            userName:"Ira",
-            isRestaurantReview: true,
-            createdAt:"2020-06-01T12:00:00.0002",
-            reviewText: "This is a must visit.",
-        },
-        {
-            userName:"khushi",
-            isRestaurantReview: false,
-            createdAt:"2020-06-01T12:00:00.0002",
-            reviewText: "This is a must visit.",
-        },
-        {
-            userName:"Alexa",
-            isRestaurantReview: true,
-            createdAt:"2020-06-01T12:00:00.0002",
-            reviewText: "This is a must visit.",
-        },
-        {
-            userName:"Siri",
-            isRestaurantReview: false,
-            createdAt:"2020-06-01T12:00:00.0002",
-            reviewText: "This is a must visit.",
-        },
-    ]);
-
-    const cuisines = ["North Indian", "chinese", "Italian"];
-    const averageCost = 100;
-
-    const ratingChanged = (newRating) => {
-        console.log(newRating);
-    }
+  const { id } = useParams();
 
     const settings = {
         infinite: false,
@@ -90,7 +58,36 @@ const Overview = () => {
             },
           },
         ],
-      };
+    };
+
+    const reduxState = useSelector(
+      (globalStore) => globalStore.restaurant.selectedRestaurant.restaurant
+    );
+    const dispatch = useDispatch();
+  
+    useEffect(() => {
+      if (reduxState) {
+        dispatch(getImage(reduxState?.menuImages)).then((data) => {
+          const images = [];
+          data.payload.image.images.map(({ location }) => images.push(location));
+          setMenuImages(images);
+          console.log(images);
+        });
+        dispatch(getReviews(reduxState?._id)).then((data) => {
+          setReviews(data.payload.reviews);
+        })
+      }
+    }, [reduxState]);
+  
+    const ratingChanged = (newRating) => {
+      console.log(newRating);
+    };
+  
+    const getLatLong = (mapAddress) => {
+      const data = mapAddress?.split(",").map((item) => parseFloat(item));
+      return console.log(data);
+    };
+
     return (
         <>
         <div className="flex flex-col md:flex-row relative gap-6">
@@ -107,17 +104,19 @@ const Overview = () => {
             </Link>
           </div>
           <div className="flex flex-wrap gap-3 my-4">
-           <MenuCollection menuTitle='Menu' pages='3' image={menuImage}/>
+           <MenuCollection menuTitle='Menu' pages='2' image={menuImage}/>
           </div>
           <h4 className="text-lg font-medium my-4">Cuisines</h4>
           <div className="flex flex-wrap gap-2">
-           {cuisines.map(data => (
-               <span className="border border-gray-600 text-blue-600 px-2 py-1 rounded-full">{data}</span>
-           ))}
+            {reduxState?.cuisine.map((data) => (
+              <span className="border border-gray-600 text-blue-600 px-2 py-1 rounded-full">
+                {data}
+              </span>
+            ))}
           </div>
           <div className="my-4">
             <h4 className="text-lg font-medium">Average Cost</h4>
-            <h6>${averageCost} for one order (approx.)</h6>
+            <h6>₹{reduxState?.averageCost} for one order (approx.)</h6>
             <small className="text-gray-500">
               Exclusive of applicable taxes and service charges, if any
             </small>
@@ -153,7 +152,7 @@ const Overview = () => {
               </Slider>
             </div>
           </div>
-          <div className="mb-4 mt-8">
+          <div className="mb-20 mt-8">
               <h4 className="text-lg font-medium">Rate your delivery experience</h4>
               <ReactStars
               count={5}
@@ -166,13 +165,21 @@ const Overview = () => {
             ))}
           </div>
           <div className="my-4 w-full md:hidden flex flex-col gap-4">
-              <Mapview title="McDonald's" phno="+919899786756" mapLocation={[28.6812933768556, 77.20791895432784]
-} address="41, Block UA, Jawahar Nagar, Bungalow Road, Near Kamla nagar, New Delhi"/>
+          <Mapview
+            title={reduxState?.name}
+            phno={reduxState?.contactNumber}
+            mapLocation={getLatLong(reduxState?.mapLocation)}
+            address={reduxState?.address}
+          />
           </div>
           </div> 
           <aside style={{height: 'fit-content'}} className="hidden md:flex md:w-4/12 sticky rounded-xl top-2 bg-white p-5 shadow-md flex-col gap-4">
-              <Mapview title="McDonald's" phno="+919899786756" mapLocation={[28.6812933768556, 77.20791895432784]
-} address="41, Block UA, Jawahar Nagar, Bungalow Road, Near Kamla nagar, New Delhi"/>
+          <Mapview
+            title={reduxState?.name}
+            phno={reduxState?.contactNumber}
+            mapLocation={getLatLong(reduxState?.mapLocation)}
+            address={reduxState?.address}
+          />
           </aside>
 
         </div>  
