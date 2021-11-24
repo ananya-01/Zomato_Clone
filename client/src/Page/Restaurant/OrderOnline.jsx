@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 
 //Icons
 import { AiOutlineCompass } from "react-icons/ai";
@@ -9,76 +10,16 @@ import FloatMenuBtn from "../../components/restaurant/Order-Online/FloatMenuBtn"
 import FoodList from "../../components/restaurant/Order-Online/FoodList";
 import MenuListContainer from "../../components/restaurant/Order-Online/MenuListContainer";
 
-const OrderOnline = () => {
+// redux actions
+import { getFoodList } from "../../Redux/Reducer/Food/Food.action";
 
-  const [menu, setMenu] = useState([{
-    name:"Recommended",
-    items:[{
-      image:"https://b.zmtcdn.com/data/dish_photos/008/a478c69ce492f319690d96c16dd38008.jpg",
-      name:"Paneer Butter Masala",
-      price:"₹210",
-      rating:"4",
-      descript:"Bestseller",
-      
-    },{
-        image:"https://b.zmtcdn.com/data/dish_photos/008/a478c69ce492f319690d96c16dd38008.jpg",
-        name:"Paneer Butter Masala",
-        price:"₹210",
-        rating:"4",
-        descript:"Bestseller",
-        
-      },{
-        image:"https://b.zmtcdn.com/data/dish_photos/008/a478c69ce492f319690d96c16dd38008.jpg",
-        name:"Paneer Butter Masala",
-        price:"₹210",
-        rating:"4",
-        descript:"Bestseller",
-        
-      }],
-  },
-  {
-    name:"Combos",
-    items:[{
-        image:"https://b.zmtcdn.com/data/dish_photos/008/a478c69ce492f319690d96c16dd38008.jpg",
-        name:"Paneer Butter Masala",
-        price:"₹210",
-        rating:"4",
-        descript:"Bestseller",
-        
-      },{
-        image:"https://b.zmtcdn.com/data/dish_photos/008/a478c69ce492f319690d96c16dd38008.jpg",
-        name:"Paneer Butter Masala",
-        price:"₹210",
-        rating:"4",
-        descript:"Bestseller",
-        
-      },{
-        image:"https://b.zmtcdn.com/data/dish_photos/008/a478c69ce492f319690d96c16dd38008.jpg",
-        name:"Paneer Butter Masala",
-        price:"₹210",
-        rating:"4",
-        descript:"Bestseller",
-        
-      }],
-  },
-  {
-    name:"Half and Half Combos",
-    items:[{
-        image:"https://b.zmtcdn.com/data/dish_photos/008/a478c69ce492f319690d96c16dd38008.jpg",
-        name:"Paneer Butter Masala",
-        price:"₹210",
-        rating:"4",
-        descript:"Bestseller",
-        
-      },{
-        image:"https://b.zmtcdn.com/data/dish_photos/008/a478c69ce492f319690d96c16dd38008.jpg",
-        name:"Paneer Butter Masala",
-        price:"₹210",
-        rating:"4",
-        descript:"Bestseller",
-        
-      }],
-  },]);
+const OrderOnline = () => {
+  const dispatch = useDispatch();
+  const reduxState = useSelector(
+    (globalStore) => globalStore.restaurant.selectedRestaurant.restaurant
+  );
+
+  const [menu, setMenu] = useState([]);
   const [selected, setSelected] = useState("Recommended");
 
   const onClickHandler = (e) => {
@@ -87,6 +28,15 @@ const OrderOnline = () => {
     }
     return;
   };
+  useEffect(() => {
+    if (reduxState) {
+      dispatch(getFoodList(reduxState.menu)).then((data) => {
+        if (data.payload.menus) {
+          setMenu(data.payload.menus.menus);
+        }
+      });
+    }
+  }, [reduxState]);
 
  return (
     <>
