@@ -19,7 +19,21 @@ import Photos from "./Page/Restaurant/Photos";
 import Checkout from "./Page/Restaurant/Checkout";
 import RestaurantRedirect from "./Page/Restaurant/RestaurantRedirect";
 
+// redux action
+import { getMySelf } from "./Redux/Reducer/User/user.action";
+
+// axios global settings
+if (localStorage.zomatoUser) {
+  const { token } = JSON.parse(localStorage.zomatoUser);
+  axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+}
+
 const App = () => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    if (localStorage.zomatoUser) dispatch(getMySelf());
+  }, []);
+
   return (
     <>
     <Route path="/" exact>

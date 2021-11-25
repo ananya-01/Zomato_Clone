@@ -1,25 +1,50 @@
-import { Dialog, Transition } from '@headlessui/react'
-import { Fragment, useState } from 'react'
+import { Dialog, Transition } from "@headlessui/react";
+import { Fragment, useState } from "react";
+import { useDispatch } from "react-redux";
 
-//icon
-import {FcGoogle} from 'react-icons/fc';
+// Icon
+import { FcGoogle } from "react-icons/fc";
 
-export default function SignUp({isOpen, setIsOpen}) {
-    const [userData,setUserData] = useState({
-        email:"",
-        password:"",
-        fullname:"",
-    })
-    const handleChange = (e) => {setUserData(props => ({...ProgressEvent, [e.target.id]: e.target.value}))}
+// Redux
+import { signUp } from "../../Redux/Reducer/Auth/Auth.action";
 
-    function closeModal() {
-    setIsOpen(false)
-    }
-    
+export default function SignUp({ isOpen, setIsOpen }) {
+  const dispatch = useDispatch();
+  const [userData, setUserData] = useState({
+    email: "",
+    password: "",
+    fullname: "",
+  });
+
+  const handleChange = (e) => {
+    setUserData((prev) => ({ ...prev, [e.target.id]: e.target.value }));
+  };
+
+  function closeModal() {
+    setIsOpen(false);
+  }
+
+  const submit = () => {
+    setUserData({
+      email: "",
+      password: "",
+      fullname: "",
+    });
+    dispatch(
+      signUp({
+        email: userData.email,
+        password: userData.password,
+        fullName: userData.fullname,
+      })
+    );
+    closeModal();
+  };
+
+  const googleSignUp = () =>
+    (window.location.href = "http://localhost:4000/auth/google");
 
   return (
     <>
-     
       <Transition appear show={isOpen} as={Fragment}>
         <Dialog
           as="div"
@@ -59,11 +84,10 @@ export default function SignUp({isOpen, setIsOpen}) {
                 <Dialog.Title
                   as="h3"
                   className="text-lg font-medium leading-6 text-gray-900"
-                >
-                </Dialog.Title>
+                ></Dialog.Title>
                 <div className="mt-2 flex flex-col gap-3 w-full">
                   <button
-                    
+                    onClick={googleSignUp}
                     className="py-2 justify-center rounded-lg flex items-center gap-2 w-full border border-gray-400 bg-white text-gray-700 hover:bg-gray-100"
                   >
                     Sign up with Google <FcGoogle />
@@ -87,7 +111,7 @@ export default function SignUp({isOpen, setIsOpen}) {
                         id="email"
                         value={userData.email}
                         onChange={handleChange}
-                        placeholder="email@gmail.com"
+                        placeholder="email@email.com"
                         className="w-full border border-gray-400 px-3 py-2 rounded-lg focus:outline-none focus:border-zomato-400"
                       />
                     </div>
@@ -103,7 +127,7 @@ export default function SignUp({isOpen, setIsOpen}) {
                       />
                     </div>
                     <div
-                      onClick={closeModal}
+                      onClick={submit}
                       className="w-full text-center bg-zomato-400 text-white py-2 rounded-lg"
                     >
                       Sign Up
@@ -116,5 +140,5 @@ export default function SignUp({isOpen, setIsOpen}) {
         </Dialog>
       </Transition>
     </>
-  )
+  );
 }

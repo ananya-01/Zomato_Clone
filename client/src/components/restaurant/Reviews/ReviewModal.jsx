@@ -2,6 +2,10 @@ import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useState } from "react";
 import Rating from "react-rating-stars-component";
 import { useParams } from "react-router-dom";
+import { useDispatch } from "react-redux";
+
+// redux action
+import { postReviews } from "../../../Redux/Reducer/Reviews/review.action";
 
 export default function ReviewModal({ isOpen, setIsOpen, ...props }) {
   const [reviewData, setReviewData] = useState({
@@ -12,7 +16,7 @@ export default function ReviewModal({ isOpen, setIsOpen, ...props }) {
     rating: 0,
   });
   const { id } = useParams();
- 
+  const dispatch = useDispatch();
 
   function closeModal() {
     setIsOpen(false);
@@ -24,21 +28,36 @@ export default function ReviewModal({ isOpen, setIsOpen, ...props }) {
   const handleRating = (rating) =>
     setReviewData((prev) => ({ ...prev, rating }));
 
-  const toggleDining = () => {
+    const toggleDining = () =>
     setReviewData((prev) => ({
       ...prev,
-      isRestaurantReview: !prev.isRestaurantReview,
+      isRestaurantReview: !reviewData.isRestaurantReview,
       isFoodReview: false,
     }));
-  };
 
-  const toggleDelivery = () => {
+  const toggleDelivery = () =>
     setReviewData((prev) => ({
       ...prev,
       isRestaurantReview: false,
-      isFoodReview: !prev.isFoodReview,
+      isFoodReview: !reviewData.isFoodReview,
     }));
-  };
+
+    const submit = () => {
+      dispatch(
+        postReviews({
+          ...reviewData,
+          restaurant: id,
+        })
+      );
+      setReviewData({
+        subject: "",
+        reviewText: "",
+        isRestaurantReview: false,
+        isFoodReview: false,
+        rating: 0,
+      });
+      closeModal();
+    };
 
   return (
     <>
@@ -109,13 +128,14 @@ export default function ReviewModal({ isOpen, setIsOpen, ...props }) {
                   </div>
                   <Rating
                     count={5}
+                    size={24}
                     value={reviewData.rating}
                     onChange={handleRating}
                   />
 
                   <form className="flex flex-col gap-4">
                     <div className="w-full flex flex-col gap-2">
-                      <label className="w-full flex flex-col gap-2">
+                      <label  htmlFor="subject">
                         Subject
                       </label>
                       <input
@@ -128,14 +148,15 @@ export default function ReviewModal({ isOpen, setIsOpen, ...props }) {
                       />
                     </div>
                     <div className="w-full flex flex-col gap-2">
-                      <label className="w-full flex flex-col gap-2">
+                      <label htmlFor="reviewText">
                         Review Text
                       </label>
                       <textarea
-                        id="reviewText"
-                        placeholder="Write your review..."
-                        value={reviewData.reviewText}
-                        onChange={handleChange}
+                         id="reviewText"
+                         placeholder="amazing food"
+                         rows="5"
+                         value={reviewData.reviewText}
+                         onChange={handleChange}
                         className="w-full border border-gray-400 px-3 py-2 rounded-lg focus:outline-none focus:border-zomato-400"
                       />
                     </div>
@@ -146,7 +167,7 @@ export default function ReviewModal({ isOpen, setIsOpen, ...props }) {
                   <button
                     type="button"
                     className="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-zomato-400 border border-transparent rounded-md hover:bg-zomato-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500"
-                    onClick={closeModal}
+                    onClick={submit}
                   >
                     Submit
                   </button>
