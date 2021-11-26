@@ -18,6 +18,7 @@ import Menu from "./Page/Restaurant/Menu";
 import Photos from "./Page/Restaurant/Photos";
 import Checkout from "./Page/Restaurant/Checkout";
 import RestaurantRedirect from "./Page/Restaurant/RestaurantRedirect";
+import GoogleAuth from "./Page/GoogleAuth";
 
 // redux action
 import { getMySelf } from "./Redux/Reducer/User/user.action";
@@ -41,6 +42,7 @@ const App = () => {
     </Route>
     <Route path="/restaurant/:id" exact component={RestaurantRedirect} />
       <HomeLayoutHOC path="/:type" exact component={Home} />
+      <HomeLayoutHOC path="/google/:token" exact component={GoogleAuth} />
       <RestaurantLayoutHOC  path="/restaurant/:id/overview" exact component={Overview} />
       <RestaurantLayoutHOC  path="/restaurant/:id/order-online" exact component={OrderOnline} />
       <RestaurantLayoutHOC  path="/restaurant/:id/menu" exact component={Menu} />
