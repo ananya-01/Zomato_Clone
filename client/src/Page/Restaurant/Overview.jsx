@@ -152,7 +152,7 @@ const Overview = () => {
               </Slider>
             </div>
           </div>
-          <div className="mb-20 mt-8">
+          <div className="mt-8">
               <h4 className="text-lg font-medium">Rate your delivery experience</h4>
               <ReactStars
               count={5}
